@@ -1,0 +1,9 @@
+/.dart_tool/
+/.idea/
+
+
+/windows/
+/build/
+/linux/
+/macos/
+/web/
