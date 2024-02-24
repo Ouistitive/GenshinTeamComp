@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:genshin_teamcomp/Vue/HomePage.dart';
+import 'package:genshin_teamcomp/view/HomePage.dart';
 
 void main() {
   runApp(GenshinTeamCompApp());
