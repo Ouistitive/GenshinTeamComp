@@ -8,39 +8,65 @@ import '../view/componant/CharacterCard.dart';
 
 class AddTeamCompController {
   FetchCharacters fetchCharacters = FetchCharacters();
+  List<Character> characters = [];
+  List<CharacterCard> characterCards = [];
 
   static const String title = 'Add a new Team composition';
 
-  Future<Widget> getCharacterCards() async {
-    List<CharacterCard> characterCards = [];
+  Future<void> initializeData() async {
+    try {
+      characters = await fetchCharacters.fetchAllCharacters();
 
+      characterCards = characters.map((character) => CharacterCard(
+        name: character.name,
+        rarity: character.rarity,
+        element: character.element,
+        weapon: character.weapon,
+      )).toList();
+    } catch (e) {
+      print('Error initializing data: $e');
+    }
+  }
+
+  Future<List<CharacterCard>> getCharacterCards() async {
     List<Character> characters = await fetchCharacters.fetchAllCharacters();
+    List<CharacterCard> characterCards = characters.map((character) => CharacterCard(
+      name: character.name,
+      rarity: character.rarity,
+      element: character.element,
+      weapon: character.weapon,
+    )).toList();
+
+    return characterCards;
+  }
+
+
+  Future<List<CharacterCard>> searchCharacter(String? name) async {
+    characterCards = [];
+
     for(var i = 0; i < characters.length; i++) {
-      characterCards.add(CharacterCard(
-        name: characters[i].name,
-        rarity: characters[i].rarity,
-        element: characters[i].element,
-        weapon: characters[i].weapon,
-      ));
+      if(name == null) {
+        characterCards.add(CharacterCard(
+          name: characters[i].name,
+          rarity: characters[i].rarity,
+          element: characters[i].element,
+          weapon: characters[i].weapon,
+        ));
+        continue;
+      }
+
+      if(characters[i].name.toLowerCase().contains(name.toLowerCase())) {
+        characterCards.add(CharacterCard(
+          name: characters[i].name,
+          rarity: characters[i].rarity,
+          element: characters[i].element,
+          weapon: characters[i].weapon,
+        ));
+      }
+
     }
 
-    return Expanded(
-      child: ListView.builder(
-        itemCount: (characterCards.length / 3).ceil(),
-        itemBuilder: (BuildContext context, int index) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: characterCards
-                .skip(index * 3)
-                .take(3)
-                .map((characterCard) => Expanded(
-              child: characterCard,
-            ))
-                .toList(),
-          );
-        },
-      ),
-    );
-
+    return characterCards;
   }
+
 }

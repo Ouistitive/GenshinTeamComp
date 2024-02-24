@@ -4,6 +4,17 @@ import 'package:flutter/material.dart';
 class CharacterCard extends StatelessWidget {
   static const cardSize = 130.0;
   static const cardImageSize = 80.0;
+  static const visionSize = 30.0;
+
+  static Map<String, Color> elementToColor = {
+    "Pyro": Colors.red,
+    "Hydro": Colors.blue,
+    "Anemo": Colors.green,
+    "Electro": Colors.purpleAccent,
+    "Cryo": Colors.cyan,
+    "Geo": Colors.orange,
+    "Dendro": Colors.green
+  };
 
   final String name;
   final int rarity;
@@ -22,9 +33,13 @@ class CharacterCard extends StatelessWidget {
     return SizedBox(
       width: cardSize,
       child: Card(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: elementToColor[element]!, width: 2),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               width: cardImageSize,
               height: cardImageSize,
               child: Image.network(
@@ -44,14 +59,24 @@ class CharacterCard extends StatelessWidget {
                 },
               ),
             ),
-            Container(
-                width: cardImageSize,
-                height: cardImageSize,
-              child: Image.network("https://genshin.jmp.blue/elements/${element.toLowerCase()}/icon")
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(rarity, (index) {
+                return Image.asset("star.png", width: 20, height: 20);
+              },),
             ),
-            Text(name),
-            Text(rarity.toString()),
-            Text(weapon)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                    width: visionSize,
+                    height: visionSize,
+                  child: Image.network("https://genshin.jmp.blue/elements/${element.toLowerCase()}/icon")
+                ),
+                Text(name),
+              ],
+            ),
+            Text(weapon),
           ],
         ),
       ),
